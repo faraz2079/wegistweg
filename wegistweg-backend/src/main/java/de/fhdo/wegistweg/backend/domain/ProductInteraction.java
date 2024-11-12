@@ -1,6 +1,7 @@
 package de.fhdo.wegistweg.backend.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -13,10 +14,22 @@ public class ProductInteraction {
     @ManyToOne
     private Product product;
 
-    private LocalDateTime timeStart;
-    private LocalDateTime timeEnd;
+    @ManyToOne User user;
+
+    @NotNull
+    private LocalDateTime timestamp;
+    @NotNull
     private ProductInteractionType interactionType;
 
+    public ProductInteraction() {
+    }
+
+    public ProductInteraction(Product product, User user, LocalDateTime timestamp, ProductInteractionType interactionType) {
+        this.product = product;
+        this.user = user;
+        this.timestamp = timestamp;
+        this.interactionType = interactionType;
+    }
 
     public Long getId() {
         return id;
@@ -34,20 +47,20 @@ public class ProductInteraction {
         this.product = product;
     }
 
-    public LocalDateTime getTimeStart() {
-        return timeStart;
+    public User getUser() {
+        return user;
     }
 
-    public void setTimeStart(LocalDateTime timeStart) {
-        this.timeStart = timeStart;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public LocalDateTime getTimeEnd() {
-        return timeEnd;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimeEnd(LocalDateTime timeEnd) {
-        this.timeEnd = timeEnd;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public ProductInteractionType getInteractionType() {
