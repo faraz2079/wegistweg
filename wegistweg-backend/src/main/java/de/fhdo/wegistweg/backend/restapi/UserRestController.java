@@ -2,7 +2,6 @@ package de.fhdo.wegistweg.backend.restapi;
 
 import de.fhdo.wegistweg.backend.domain.User;
 import de.fhdo.wegistweg.backend.services.UserService;
-import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
