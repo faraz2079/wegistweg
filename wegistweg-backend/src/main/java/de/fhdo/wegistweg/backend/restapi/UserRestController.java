@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/user", produces = "application/json")
 public class UserRestController {
-    private static Log log = LogFactory.getLog(UserRestController.class);
+    private static final Log log = LogFactory.getLog(UserRestController.class);
 
     private final UserService userService;
 
