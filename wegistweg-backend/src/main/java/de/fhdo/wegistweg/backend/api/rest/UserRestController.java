@@ -1,4 +1,4 @@
-package de.fhdo.wegistweg.backend.restapi;
+package de.fhdo.wegistweg.backend.api.rest;
 
 import de.fhdo.wegistweg.backend.domain.User;
 import de.fhdo.wegistweg.backend.services.UserService;
