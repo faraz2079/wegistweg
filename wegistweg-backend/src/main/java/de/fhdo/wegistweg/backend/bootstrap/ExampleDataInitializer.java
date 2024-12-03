@@ -58,8 +58,18 @@ public class ExampleDataInitializer implements CommandLineRunner {
     }
 
     private void initProducts() {
+        String[] productNamesOne = {"Silk", "Wool", "Cotton", "Polyester", "Recycled Polyester",
+                "Black", "White", "Grey", "Red", "Green", "Blue", "Yellow"};
+        String[] productNamesTwo = {"Sweater", "Trousers", "Coat", "Jacket", "T-Shirt", "Hat",
+                "Tablecloth", "Carpet", "Blanket", "Curtains", "Towel", "Bag"};
+
         for (int i = 0; i < 50; i++) {
             Product product = new Product();
+            product.setName(
+                    productNamesOne[random.nextInt(productNamesOne.length)] +
+                    " " +
+                    productNamesTwo[random.nextInt(productNamesTwo.length)]
+            );
             product.setStock(random.nextInt(0,100));
             product.setPrice(getRandomPrice());
 
