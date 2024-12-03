@@ -1,0 +1,28 @@
+type Query {
+    products: [Product!]!
+}
+
+type User {
+    id: ID!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    stock: Int!
+    price: Float!
+}
+
+type ProductInteraction {
+    id: ID!
+
+    user: User!
+    product: Product!
+
+    timestamp: String!
+    type: ProductInteractionType!
+}
+
+enum ProductInteractionType {
+    VIEW_START, VIEW_END, ADD_TO_CART, REMOVE_FROM_CART
+}
