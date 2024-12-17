@@ -1,22 +1,10 @@
 package de.fhdo.wegistweg.service;
 
 import de.fhdo.wegistweg.entity.Product;
-import de.fhdo.wegistweg.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class ProductService {
-    @Autowired
-    private ProductRepository productRepository;
-
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
-    }
-
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
-    }
+public interface ProductService {
+    List<Product> getProducts();
+    int getCurrentStock(Product product);
 }
