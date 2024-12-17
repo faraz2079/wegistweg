@@ -1,7 +1,7 @@
-package de.fhdo.wegistweg.Service;
+package de.fhdo.wegistweg.service;
 
-import de.fhdo.wegistweg.Entity.Product;
-import de.fhdo.wegistweg.Repository.ProductRepository;
+import de.fhdo.wegistweg.entity.Product;
+import de.fhdo.wegistweg.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,10 @@
-package de.fhdo.wegistweg.Controller;
+package de.fhdo.wegistweg.api.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import de.fhdo.wegistweg.Service.PasswordEncoder;
+import de.fhdo.wegistweg.service.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import de.fhdo.wegistweg.Entity.User;
-import de.fhdo.wegistweg.Service.UserService;
+import de.fhdo.wegistweg.entity.User;
+import de.fhdo.wegistweg.service.UserService;
 
 
 import java.util.List;

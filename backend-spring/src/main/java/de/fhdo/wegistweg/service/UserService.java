@@ -1,7 +1,7 @@
-package de.fhdo.wegistweg.Service;
+package de.fhdo.wegistweg.service;
 
-import de.fhdo.wegistweg.Entity.User;
-import de.fhdo.wegistweg.Repository.UserRepository;
+import de.fhdo.wegistweg.entity.User;
+import de.fhdo.wegistweg.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package de.fhdo.wegistweg.Entity;
+package de.fhdo.wegistweg.entity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

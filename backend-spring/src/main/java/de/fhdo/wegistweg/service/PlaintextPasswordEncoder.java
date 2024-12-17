@@ -1,4 +1,4 @@
-package de.fhdo.wegistweg.Service;
+package de.fhdo.wegistweg.service;
 
 import org.springframework.stereotype.Service;
 

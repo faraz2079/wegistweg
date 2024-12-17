@@ -1,6 +1,6 @@
-package de.fhdo.wegistweg.Repository;
+package de.fhdo.wegistweg.repository;
 
-import de.fhdo.wegistweg.Entity.User;
+import de.fhdo.wegistweg.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

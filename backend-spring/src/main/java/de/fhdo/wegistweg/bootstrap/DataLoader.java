@@ -1,10 +1,10 @@
-package de.fhdo.wegistweg;
+package de.fhdo.wegistweg.bootstrap;
 
-import de.fhdo.wegistweg.Entity.User;
-import de.fhdo.wegistweg.Repository.UserRepository;
+import de.fhdo.wegistweg.entity.User;
+import de.fhdo.wegistweg.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import de.fhdo.wegistweg.Service.PasswordEncoder;
+import de.fhdo.wegistweg.service.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
