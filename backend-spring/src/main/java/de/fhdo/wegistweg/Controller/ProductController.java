@@ -1,9 +1,9 @@
-package Controller;
+package de.fhdo.wegistweg.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import Entity.Product;
-import Service.ProductService;
+import de.fhdo.wegistweg.Entity.Product;
+import de.fhdo.wegistweg.Service.ProductService;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
-package Repository;
+package de.fhdo.wegistweg.Repository;
 
-import Entity.Product;
+import de.fhdo.wegistweg.Entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
