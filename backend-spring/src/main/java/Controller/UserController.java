@@ -1,7 +1,7 @@
 package Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import Service.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import Entity.User;
 import Service.UserService;

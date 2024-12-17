@@ -3,7 +3,7 @@ import Entity.User;
 import Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import Service.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
