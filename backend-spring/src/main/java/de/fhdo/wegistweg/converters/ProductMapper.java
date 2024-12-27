@@ -9,6 +9,7 @@ public class ProductMapper {
     public ProductDto entityToDto(Product entity) {
         ProductDto dto = new ProductDto();
         dto.setId(entity.getId());
+        dto.setName(entity.getName());
         dto.setStock(entity.getStock());
         dto.setPrice(entity.getPrice());
 

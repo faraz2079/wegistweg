@@ -1,11 +1,16 @@
 package de.fhdo.wegistweg.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 
 public class ProductDto {
     @NotNull
     private Long id;
+
+    @NotNull
+    @NotBlank
+    private String name;
 
     @NotNull
     @PositiveOrZero
@@ -29,6 +34,14 @@ public class ProductDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getStock() {
