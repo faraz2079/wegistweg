@@ -69,7 +69,7 @@ public class ExampleDataInitializer implements CommandLineRunner {
     }
 
     private void initProducts() {
-        String[] productNamesOne = {"Silk", "Wool", "Cotton", "Polyester", "Recycled Polyester",
+        String[] productNamesOne = {"Silk", "Wool", "Cotton", "Polyester",
                 "Black", "White", "Grey", "Red", "Green", "Blue", "Yellow"};
         String[] productNamesTwo = {"Sweater", "Trousers", "Coat", "Jacket", "T-Shirt", "Hat",
                 "Tablecloth", "Carpet", "Blanket", "Curtains", "Towel", "Bag"};

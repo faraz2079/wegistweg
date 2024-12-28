@@ -14,6 +14,7 @@ public interface ProductInteractionService {
     // TODO Im Interface auch Product oder ProductDTO anbieten?
     int getCurrentPageViews(Long productId);
 
-    public List<ProductViewCountDto> getTopTenMostViewedProducts();
+    List<ProductViewCountDto> getTopTenMostViewedProducts_allTime();
+    List<ProductViewCountDto> getTopTenMostViewedProducts_today();
 
 }

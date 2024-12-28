@@ -39,7 +39,7 @@ class ProductInteractionServiceTest {
 
     @Test
     void getTopTenMostViewedProducts() {
-        List<ProductViewCountDto> results = service.getTopTenMostViewedProducts();
+        List<ProductViewCountDto> results = service.getTopTenMostViewedProducts_allTime();
         System.out.println("Size: " + results.size());
         System.out.println("Results: " + results);
     }

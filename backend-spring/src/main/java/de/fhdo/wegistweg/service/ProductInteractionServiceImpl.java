@@ -11,6 +11,7 @@ import de.fhdo.wegistweg.repository.ProductInteractionRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -60,10 +61,29 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
     }
 
     @Override
-    public List<ProductViewCountDto> getTopTenMostViewedProducts() {
+    public List<ProductViewCountDto> getTopTenMostViewedProducts_allTime() {
         Pageable topTen = Pageable.ofSize(10);
         List<Object[]> results = repository.findMostViewedProducts(topTen);
 
+        return convertResults(results);
+    }
+
+
+    @Override
+    public List<ProductViewCountDto> getTopTenMostViewedProducts_today() {
+        Pageable topTen = Pageable.ofSize(10);
+        LocalDateTime startOfToday = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        List<Object[]> results = repository.findMostViewedProducts(topTen, startOfToday);
+
+        return convertResults(results);
+    }
+
+    /**
+     *
+     * @param results List of Object[] where Object[0] is of type Product and Object[1] is the view count as a long.
+     * @return ProductViewCountDto representation of the param.
+     */
+    private List<ProductViewCountDto> convertResults(List<Object[]> results) {
         return results.stream()
                 .map(result -> {
                     final Product product = (Product) result[0];
