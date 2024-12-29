@@ -23,6 +23,11 @@ type ProductInteraction {
     type: ProductInteractionType!
 }
 
+type Subscription {
+    productViews(productId: ID): Int
+    counter: Int
+}
+
 enum ProductInteractionType {
     VIEW_START, VIEW_END, ADD_TO_CART, REMOVE_FROM_CART
 }
