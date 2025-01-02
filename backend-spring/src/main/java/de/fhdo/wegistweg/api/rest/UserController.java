@@ -26,18 +26,29 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PostMapping
-    public User createUser(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userService.createUser(user);
-    }
+//    @PostMapping
+//    public User createUser(@RequestBody User user) {
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        return userService.createUser(user);
+//    }
 
     //check here
     // check userService && logincontroller thymeleaf
     @PostMapping("/signup")
     public User signUp(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userService.createUser(user);
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        return userService.createUser(user);
+        return userService.signUpUser(user);
+    }
+
+    @PostMapping("/login")
+    public User login(@RequestParam String email, @RequestParam String password) {
+        return userService.loginUser(email, password);
+    }
+
+    @PostMapping("/reset-password")
+    public void resetPassword(@RequestParam String email, @RequestParam String newPassword) {
+        userService.resetPassword(email, newPassword);
     }
 
     @PutMapping("/{id}")
