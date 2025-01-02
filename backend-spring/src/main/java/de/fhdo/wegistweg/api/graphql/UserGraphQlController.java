@@ -4,8 +4,6 @@ import de.fhdo.wegistweg.entity.User;
 import de.fhdo.wegistweg.service.UserService;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.graphql.data.method.annotation.MutationMapping;
 
 import java.util.List;
 
