@@ -1,5 +1,7 @@
 type Query {
+    product(id: ID!): Product!
     products: [Product!]!
+    productsMostViewed: [ProductViewCount!]!
 }
 
 type User {
@@ -11,6 +13,11 @@ type Product {
     name: String!
     stock: Int!
     price: Float!
+}
+
+type ProductViewCount {
+    product: Product
+    viewCount: Int
 }
 
 type ProductInteraction {

@@ -23,8 +23,8 @@ export default {
       <div class="footer-section">
         <h2>Products</h2>
         <ul>
-          <li><router-link to="/testCounter">All products</router-link></li>
-          <li><router-link to="/testCounter">Most viewed</router-link></li>
+          <li><router-link :to="{ name: 'products'}">All products</router-link></li>
+          <li><router-link :to="{ name: 'productsMostViewed'}">Most viewed</router-link></li>
         </ul>
       </div>
       <div class="footer-section">

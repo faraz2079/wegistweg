@@ -1,6 +1,16 @@
 <script>
 export default {
-  name: "TestHello"
+  name: "TestHello",
+  data() {
+
+  },
+  methods: {
+
+  },
+  mounted() {
+    console.log("Component 'TestHello' mounted: " + this.$route.params.id);
+
+  }
 }
 </script>
 
