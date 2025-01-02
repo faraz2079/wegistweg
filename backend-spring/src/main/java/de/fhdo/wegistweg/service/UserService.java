@@ -28,4 +28,6 @@ public class UserService {
         existingUser.setRole(user.getRole());
         return userRepository.save(existingUser);
     }
+
+    //add some functionalities e.g. login and signing up
 }
