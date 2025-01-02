@@ -1,6 +1,5 @@
 package de.fhdo.wegistweg.api.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import de.fhdo.wegistweg.service.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import de.fhdo.wegistweg.entity.User;
@@ -12,11 +11,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
-    private UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @GetMapping
     public List<User> getAllUsers() {
@@ -29,6 +31,8 @@ public class UserController {
         return userService.createUser(user);
     }
 
+    //check here
+    // check userService && logincontroller thymeleaf
     @PostMapping("/signup")
     public User signUp(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
