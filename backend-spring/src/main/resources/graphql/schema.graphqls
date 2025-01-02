@@ -4,6 +4,11 @@ type Query {
     users: [User!]!
 }
 
+type Mutation {
+    startViewing(productId: ID!, userId: ID!): Boolean
+    stopViewing(productId: ID!, userId: ID!): Boolean
+}
+
 type User {
     id: ID!
     username: String!

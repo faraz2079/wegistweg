@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 
 export default {
   name: "ProductDetail",
+  inject: ['authState'],
   apollo: {
     product: {
       query: gql`query ($id: ID!) {
@@ -15,14 +16,82 @@ export default {
         }
       }`,
       variables () {
-        return { id: this.$route.params.id }
+        return { id: this.productId }
       }
+    },
+    $subscribe: {
+      viewCountChanged: {
+        query: gql`subscription ($productId: ID!) {
+          productViews(productId: $productId)
+        }`,
+        variables () {
+          return { productId: this.productId }
+        },
+        result ({ data }) {
+          this.viewCount = data.productViews
+        }
+      },
     }
   },
   data() {
     return {
-      product: {}
+      productId: null,
+      product: {},
+      viewCount: null,
     }
+  },
+  watch: {
+    '$route.params.id'(newVal, oldVal) {
+      // React to changes of the route.
+      // This is not called initially!
+      console.log(newVal)
+      console.log(oldVal)
+
+      this.productId = newVal
+      this.stopViewing(oldVal)
+      this.startViewing(newVal)
+    }
+  },
+  methods: {
+    // Notify the server that the product is being viewed
+    startViewing(productId) {
+      // Only for logged-in users
+      if (this.authState.userId) {
+        console.log("Starting viewing {productId}", productId)
+        this.$apollo.mutate({
+            mutation: gql`mutation($productId: ID!, $userId: ID!) {
+              startViewing(productId: $productId, userId: $userId)
+            }`,
+          variables: {
+              productId: productId,
+              userId: this.authState.userId
+          }
+        })
+      }
+    },
+    stopViewing(productId) {
+      if (this.authState.userId) {
+        console.log("Stop viewing {productId}", productId)
+        this.$apollo.mutate({
+          mutation: gql`mutation($productId: ID!, $userId: ID!) {
+              stopViewing(productId: $productId, userId: $userId)
+            }`,
+          variables: {
+            productId: productId,
+            userId: this.authState.userId
+          }
+        })
+      }
+    },
+  },
+  mounted() {
+    console.log("Component mounted.");
+    this.productId = this.$route.params.id
+    this.startViewing(this.productId)
+  },
+  beforeUnmount() {
+    console.log("Before unmount.");
+    this.stopViewing(this.productId)
   }
 }
 </script>
@@ -31,14 +100,16 @@ export default {
   <div class="container">
     <div class="productDetails">
       <h1 class="productName">{{ product.name }}</h1>
-      <span class="productViews">currrently viewed by 5 users</span>
+      <span class="productViews">currently viewed by {{ viewCount }} users</span>
       <span class="productStock">{{ product.stock }} in stock</span>
       <span class="productPrice">{{ product.price }}€</span>
     </div>
 
     <div class="divider"></div>
 
-    <div class="productAdminOptions">
+
+    <!-- TODO Move to separate component -->
+    <div v-if="this.authState.isAdmin" class="productAdminOptions">
       <h3>Admin Options</h3>
       <label>
         <input type="checkbox">
