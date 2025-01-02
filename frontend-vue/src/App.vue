@@ -1,5 +1,19 @@
 <script>
 export default {
+  data() {
+    return {
+      authState: {
+        userId: null,
+        isAdmin: false,
+        guestSessionId: Math.floor(Math.random() * 100000000),
+      }
+    }
+  },
+  provide() {
+    return {
+      authState: this.authState
+    }
+  }
 }
 </script>
 

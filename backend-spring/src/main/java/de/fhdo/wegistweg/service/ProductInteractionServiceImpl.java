@@ -7,7 +7,11 @@ import de.fhdo.wegistweg.entity.ProductInteraction;
 import de.fhdo.wegistweg.dto.ProductDto;
 import de.fhdo.wegistweg.dto.ProductInteractionDto;
 import de.fhdo.wegistweg.dto.ProductViewCountDto;
+import de.fhdo.wegistweg.entity.ProductInteractionType;
+import de.fhdo.wegistweg.entity.User;
 import de.fhdo.wegistweg.repository.ProductInteractionRepository;
+import de.fhdo.wegistweg.repository.ProductRepository;
+import de.fhdo.wegistweg.repository.UserRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -28,14 +32,38 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
     private final Map<Long, Set<Long>> activeViewersByProduct = new ConcurrentHashMap<>();
     private final Sinks.Many<Long> activeViewersByProductSink = Sinks.many().multicast().directBestEffort();
 
-    private final ProductInteractionRepository repository;
+    private final ProductRepository productRepository;
+    private final ProductInteractionRepository productInteractionRepository;
+    private final UserRepository userRepository;
     private final ProductInteractionMapper productInteractionMapper;
     private final ProductMapper productMapper;
 
-    public ProductInteractionServiceImpl(ProductInteractionRepository repositoryl, ProductInteractionMapper productInteractionMapper, ProductMapper productMapper) {
-        this.repository = repositoryl;
+    public ProductInteractionServiceImpl(ProductRepository productRepository, ProductInteractionRepository productInteractionRepository, UserRepository userRepository, ProductInteractionMapper productInteractionMapper, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productInteractionRepository = productInteractionRepository;
+        this.userRepository = userRepository;
         this.productInteractionMapper = productInteractionMapper;
         this.productMapper = productMapper;
+    }
+
+    @Override
+    public void startViewing(long productId, long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        Product product = productRepository.findById(productId).orElseThrow();
+
+        ProductInteraction productInteraction = new ProductInteraction(product, user, LocalDateTime.now(), ProductInteractionType.VIEW_START);
+
+        addProductInteraction(productInteraction);
+    }
+
+    @Override
+    public void stopViewing(long productId, long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        Product product = productRepository.findById(productId).orElseThrow();
+
+        ProductInteraction productInteraction = new ProductInteraction(product, user, LocalDateTime.now(), ProductInteractionType.VIEW_END);
+
+        addProductInteraction(productInteraction);
     }
 
     @Override
@@ -44,16 +72,11 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
         final Long userId = productInteraction.getUser().getId();
 
         switch (productInteraction.getInteractionType()) {
-            case VIEW_START -> startViewing(productId, userId);
-            case VIEW_END -> stopViewing(productId, userId);
+            case VIEW_START -> processStartViewingInteraction(productId, userId);
+            case VIEW_END -> processStopViewingInteraction(productId, userId);
         }
 
-        repository.save(productInteraction);
-    }
-
-    @Override
-    public void addProductInteraction(ProductInteractionDto productInteractionDto) {
-        addProductInteraction(productInteractionMapper.dtoToEntity(productInteractionDto));
+        productInteractionRepository.save(productInteraction);
     }
 
     @Override
@@ -73,7 +96,7 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
     @Override
     public List<ProductViewCountDto> getTopTenMostViewedProducts_allTime() {
         Pageable topTen = Pageable.ofSize(10);
-        List<Object[]> results = repository.findMostViewedProducts(topTen);
+        List<Object[]> results = productInteractionRepository.findMostViewedProducts(topTen);
 
         return convertResults(results);
     }
@@ -83,7 +106,7 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
     public List<ProductViewCountDto> getTopTenMostViewedProducts_today() {
         Pageable topTen = Pageable.ofSize(10);
         LocalDateTime startOfToday = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        List<Object[]> results = repository.findMostViewedProducts(topTen, startOfToday);
+        List<Object[]> results = productInteractionRepository.findMostViewedProducts(topTen, startOfToday);
 
         return convertResults(results);
     }
@@ -105,7 +128,7 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
                 .collect(Collectors.toList());
     }
 
-    private void startViewing(Long productId, Long userId) {
+    private void processStartViewingInteraction(Long productId, Long userId) {
         final Set<Long> viewers = activeViewersByProduct.get(productId);
 
         if (viewers != null) {
@@ -119,7 +142,7 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
 
         activeViewersByProductSink.tryEmitNext(productId);
     }
-    private void stopViewing(Long productId, Long userId) {
+    private void processStopViewingInteraction(Long productId, Long userId) {
         final Set<Long> viewers = activeViewersByProduct.get(productId);
 
         if (viewers != null) {

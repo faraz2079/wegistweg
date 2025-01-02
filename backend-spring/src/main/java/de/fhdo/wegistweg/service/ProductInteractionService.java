@@ -8,9 +8,9 @@ import reactor.core.publisher.Flux;
 import java.util.List;
 
 public interface ProductInteractionService {
-    // TODO Wie gestalten? Methoden für DTO UND Entity anbieten?
+    void startViewing(long productId, long userId);
+    void stopViewing(long productId, long userId);
     void addProductInteraction(ProductInteraction productInteraction);
-    void addProductInteraction(ProductInteractionDto productInteractionDto);
 
     Flux<Integer> subscribeToPageViews(Long productId);
 

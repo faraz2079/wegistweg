@@ -49,7 +49,7 @@ public class ExampleDataInitializer implements CommandLineRunner {
         log.debug("Initializing Example Data");
         initUsers();
         initProducts();
-        initProductInteractions();
+        //initProductInteractions();
     }
 
     private void initUsers() {
@@ -89,7 +89,7 @@ public class ExampleDataInitializer implements CommandLineRunner {
     }
 
     private void initProductInteractions() {
-        final int numberOfInteractions = 200;
+        final int numberOfInteractions = 400;
 
         final LocalDateTime timestamp = LocalDateTime.now().minusSeconds(numberOfInteractions);
 

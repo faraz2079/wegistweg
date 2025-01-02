@@ -7,15 +7,16 @@ import productsAll from "@/components/ProductsAll.vue";
 import productDetail from "@/components/ProductDetail.vue";
 
 const routes = [
-    { path: "/", component: productsMostViewed },
-    { path: "/test", component: TestHello },
-    { path: "/test/:id", component: TestHello },
-    { path: "/testCounter", component: TestCounter },
-    { path: "/testApollo", component: TestApollo },
+    { path: "/", component: productsMostViewed, name: "home" },
 
     { path: "/products", component: productsAll, name: "products" },
     { path: "/products/mostViewed", component: productsMostViewed, name: "productsMostViewed" },
     { path: "/products/:id", component: productDetail, name: "productDetail" },
+
+    { path: "/test", component: TestHello },
+    { path: "/test/:id", component: TestHello },
+    { path: "/testCounter", component: TestCounter },
+    { path: "/testApollo", component: TestApollo },
 ]
 
 export default createRouter({
