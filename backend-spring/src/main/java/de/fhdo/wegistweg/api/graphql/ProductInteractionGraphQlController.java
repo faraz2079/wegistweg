@@ -1,10 +1,13 @@
 package de.fhdo.wegistweg.api.graphql;
 
+import de.fhdo.wegistweg.dto.ProductViewCountDto;
 import de.fhdo.wegistweg.service.ProductInteractionService;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SubscriptionMapping;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
+import java.util.List;
 
 import java.time.Duration;
 
@@ -16,6 +19,11 @@ public class ProductInteractionGraphQlController {
 
     public ProductInteractionGraphQlController(ProductInteractionService productInteractionService) {
         this.productInteractionService = productInteractionService;
+    }
+
+    @QueryMapping("productsMostViewed")
+    public List<ProductViewCountDto> getMostViewedProducts() {
+        return productInteractionService.getTopTenMostViewedProducts_today();
     }
 
     @SubscriptionMapping("productViews")
