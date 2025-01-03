@@ -98,6 +98,9 @@ export default {
         }
       })
     },
+    stopViewingCurrentProduct() {
+      this.stopViewing(this.productId)
+    },
     updateDisplaySettings() {
       console.log("Update display settings ", this.displaySettings)
       this.$apollo.mutate({
@@ -114,10 +117,12 @@ export default {
     console.log("Component mounted.");
     this.productId = this.$route.params.id
     this.startViewing(this.productId)
+    window.addEventListener('beforeunload', this.stopViewingCurrentProduct) // Ensure a "stop viewing" message is sent to the server, when the user refreshes the page
   },
   beforeUnmount() {
     console.log("Before unmount.");
     this.stopViewing(this.productId)
+    window.removeEventListener('beforeunload', this.stopViewingCurrentProduct)
   }
 }
 </script>
