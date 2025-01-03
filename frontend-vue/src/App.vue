@@ -33,7 +33,7 @@ export default {
   </main>
 
   <footer>
-    <div class="container-horizontal">
+    <nav class="container-horizontal">
       <div class="footer-section">
         <h2>Products</h2>
         <ul>
@@ -55,7 +55,7 @@ export default {
           <li><a href="#">adam@mail</a></li>
         </ul>
       </div>
-    </div>
+    </nav>
     <p class="copyright">&copy; The Springers 2024</p>
   </footer>
 </template>
