@@ -34,6 +34,7 @@ export default {
       displaySettings: {
         query: gql`subscription ($productId: ID!) {
           productDisplaySettings(productId: $productId) {
+            productId
             displayStockLevel
             displayViews
           }
@@ -43,6 +44,7 @@ export default {
         },
         result ({ data }) {
           console.log(data)
+          delete data.productDisplaySettings.__typename // Remove this field, so that the object can be reused as an input type for mutations
           this.displaySettings = data.productDisplaySettings
         }
       }
@@ -96,6 +98,17 @@ export default {
         }
       })
     },
+    updateDisplaySettings() {
+      console.log("Update display settings ", this.displaySettings)
+      this.$apollo.mutate({
+        mutation: gql`mutation($productDisplaySettings: ProductDisplaySettingsInput!) {
+            updateProductViewSettings(productDisplaySettings: $productDisplaySettings)
+          }`,
+        variables: {
+          productDisplaySettings: this.displaySettings
+        }
+      })
+    }
   },
   mounted() {
     console.log("Component mounted.");
@@ -125,11 +138,15 @@ export default {
     <div v-if="this.authState.isAdmin" class="productAdminOptions">
       <h3>Admin Options</h3>
       <label>
-        <input type="checkbox">
+        <input v-model="displaySettings.displayViews"
+               @change="event => updateDisplaySettings()"
+               type="checkbox">
         Display current views
       </label>
       <label>
-        <input type="checkbox">
+        <input v-model="displaySettings.displayStockLevel"
+               @change="event => updateDisplaySettings()"
+               type="checkbox">
         Display stock
       </label>
     </div>

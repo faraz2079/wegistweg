@@ -4,12 +4,15 @@ import de.fhdo.wegistweg.dto.ProductDisplaySettingsDto;
 import de.fhdo.wegistweg.entity.ProductDisplaySettings;
 import de.fhdo.wegistweg.repository.ProductDisplaySettingsRepository;
 import de.fhdo.wegistweg.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
 @Service
 public class ProductDisplaySettingsServiceImpl implements ProductDisplaySettingsService {
+    private static final Logger logger = LoggerFactory.getLogger(ProductDisplaySettingsServiceImpl.class);
     private final Sinks.Many<Long> productDisplaySettingsUpdatedSink = Sinks.many().multicast().directBestEffort();
 
     private final ProductDisplaySettingsRepository productDisplaySettingsRepository;
@@ -44,6 +47,7 @@ public class ProductDisplaySettingsServiceImpl implements ProductDisplaySettings
 
     @Override
     public void updateDisplaySettings(ProductDisplaySettingsDto settingsDto) {
+        logger.info("updateDisplaySettings: " + settingsDto);
         ProductDisplaySettings persistedSettings = productDisplaySettingsRepository.findProductDisplaySettingsByProductId(settingsDto.getProductId());
 
         if (persistedSettings == null) {

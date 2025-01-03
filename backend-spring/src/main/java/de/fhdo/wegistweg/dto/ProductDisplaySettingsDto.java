@@ -5,6 +5,8 @@ public class ProductDisplaySettingsDto {
     private boolean displayStockLevel;
     private boolean displayViews;
 
+    public ProductDisplaySettingsDto() {}
+
     public ProductDisplaySettingsDto(long productId) {
         this.productId = productId;
         this.displayStockLevel = true;
@@ -39,5 +41,14 @@ public class ProductDisplaySettingsDto {
 
     public void setDisplayViews(boolean displayViews) {
         this.displayViews = displayViews;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductDisplaySettingsDto{" +
+                "productId=" + productId +
+                ", displayStockLevel=" + displayStockLevel +
+                ", displayViews=" + displayViews +
+                '}';
     }
 }

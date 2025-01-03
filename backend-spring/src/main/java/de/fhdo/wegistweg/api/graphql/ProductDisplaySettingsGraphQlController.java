@@ -18,8 +18,8 @@ public class ProductDisplaySettingsGraphQlController {
     }
 
     @MutationMapping("updateProductViewSettings")
-    public Boolean updateProductDisplaySettings(ProductDisplaySettingsDto updatedSettings) {
-        service.updateDisplaySettings(updatedSettings);
+    public Boolean updateProductDisplaySettings(@Argument ProductDisplaySettingsDto productDisplaySettings) {
+        service.updateDisplaySettings(productDisplaySettings);
         return true;
     }
 

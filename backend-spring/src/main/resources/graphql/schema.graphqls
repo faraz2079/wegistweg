@@ -7,7 +7,7 @@ type Query {
 type Mutation {
     startViewing(productId: ID!, userId: ID, guestSessionId: String): Boolean
     stopViewing(productId: ID!, userId: ID, guestSessionId: String): Boolean
-    updateProductViewSettings(productId: ID!): Boolean
+    updateProductViewSettings(productDisplaySettings: ProductDisplaySettingsInput!): Boolean
 }
 
 type User {
@@ -26,6 +26,12 @@ type Product {
 type ProductViewCount {
     product: Product
     viewCount: Int
+}
+
+input ProductDisplaySettingsInput {
+    productId: ID!
+    displayStockLevel: Boolean
+    displayViews: Boolean
 }
 
 type ProductDisplaySettings {
