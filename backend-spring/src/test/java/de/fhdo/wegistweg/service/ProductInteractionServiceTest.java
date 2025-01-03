@@ -1,10 +1,7 @@
 package de.fhdo.wegistweg.service;
 
-import de.fhdo.wegistweg.entity.Product;
+import de.fhdo.wegistweg.entity.*;
 import de.fhdo.wegistweg.dto.ProductViewCountDto;
-import de.fhdo.wegistweg.entity.ProductInteraction;
-import de.fhdo.wegistweg.entity.ProductInteractionType;
-import de.fhdo.wegistweg.entity.User;
 import de.fhdo.wegistweg.repository.ProductRepository;
 import de.fhdo.wegistweg.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -74,14 +71,14 @@ class ProductInteractionServiceTest {
         User user = userRepository.getReferenceById(1L);
 
         // Ensure user is not currently viewing the product, so that he can START viewing later on.
-        service.addProductInteraction(new ProductInteraction(product, user, LocalDateTime.now(), ProductInteractionType.VIEW_END));
+        service.addProductInteraction(new RegisteredUserProductInteraction(product, LocalDateTime.now(), ProductInteractionType.VIEW_END, user));
         int initialViewCount = service.getCurrentPageViews(productId);
 
         StepVerifier.create(flux)
                 .expectNext(initialViewCount)
-                .then(() -> service.addProductInteraction(new ProductInteraction(product, user, LocalDateTime.now(), ProductInteractionType.VIEW_START)))
+                .then(() -> service.addProductInteraction(new RegisteredUserProductInteraction(product, LocalDateTime.now(), ProductInteractionType.VIEW_END, user)))
                 .expectNext(initialViewCount + 1)
-                .then(() -> service.addProductInteraction(new ProductInteraction(product, user, LocalDateTime.now(), ProductInteractionType.VIEW_END)))
+                .then(() -> service.addProductInteraction(new RegisteredUserProductInteraction(product, LocalDateTime.now(), ProductInteractionType.VIEW_END, user)))
                 .expectNext(initialViewCount)
                 .thenCancel()
                 .verify();

@@ -5,7 +5,7 @@ export default {
       authState: {
         userId: null,
         isAdmin: false,
-        guestSessionId: Math.floor(Math.random() * 100000000),
+        guestSessionId: Math.floor(Math.random() * 100000000).toString(),
       }
     }
   },

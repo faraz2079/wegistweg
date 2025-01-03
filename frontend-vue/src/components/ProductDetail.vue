@@ -55,33 +55,30 @@ export default {
   methods: {
     // Notify the server that the product is being viewed
     startViewing(productId) {
-      // Only for logged-in users
-      if (this.authState.userId) {
-        console.log("Starting viewing {productId}", productId)
-        this.$apollo.mutate({
-            mutation: gql`mutation($productId: ID!, $userId: ID!) {
-              startViewing(productId: $productId, userId: $userId)
-            }`,
-          variables: {
-              productId: productId,
-              userId: this.authState.userId
-          }
-        })
-      }
+      console.log("Starting viewing {productId}", productId)
+      this.$apollo.mutate({
+          mutation: gql`mutation($productId: ID!, $userId: ID, $guestSessionId: String) {
+            startViewing(productId: $productId, userId: $userId, guestSessionId: $guestSessionId)
+          }`,
+        variables: {
+            productId: productId,
+            userId: this.authState.userId,
+            guestSessionId: this.authState.guestSessionId
+        }
+      })
     },
     stopViewing(productId) {
-      if (this.authState.userId) {
-        console.log("Stop viewing {productId}", productId)
-        this.$apollo.mutate({
-          mutation: gql`mutation($productId: ID!, $userId: ID!) {
-              stopViewing(productId: $productId, userId: $userId)
-            }`,
-          variables: {
-            productId: productId,
-            userId: this.authState.userId
-          }
-        })
-      }
+      console.log("Stop viewing {productId}", productId)
+      this.$apollo.mutate({
+        mutation: gql`mutation($productId: ID!, $userId: ID, $guestSessionId: String) {
+            stopViewing(productId: $productId, userId: $userId, guestSessionId: $guestSessionId)
+          }`,
+        variables: {
+          productId: productId,
+          userId: this.authState.userId,
+          guestSessionId: this.authState.guestSessionId
+        }
+      })
     },
   },
   mounted() {
