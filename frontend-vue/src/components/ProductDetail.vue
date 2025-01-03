@@ -31,6 +31,21 @@ export default {
           this.viewCount = data.productViews
         }
       },
+      displaySettings: {
+        query: gql`subscription ($productId: ID!) {
+          productDisplaySettings(productId: $productId) {
+            displayStockLevel
+            displayViews
+          }
+        }`,
+        variables () {
+          return { productId: this.productId }
+        },
+        result ({ data }) {
+          console.log(data)
+          this.displaySettings = data.productDisplaySettings
+        }
+      }
     }
   },
   data() {
@@ -38,6 +53,7 @@ export default {
       productId: null,
       product: {},
       viewCount: null,
+      displaySettings: {}
     }
   },
   watch: {
@@ -97,8 +113,8 @@ export default {
   <div class="container">
     <div class="productDetails">
       <h1 class="productName">{{ product.name }}</h1>
-      <span class="productViews">currently viewed by {{ viewCount }} users</span>
-      <span class="productStock">{{ product.stock }} in stock</span>
+      <span class="productViews" v-if="displaySettings.displayViews" >currently viewed by {{ viewCount }} users</span>
+      <span class="productStock" v-if="displaySettings.displayStockLevel">{{ product.stock }} in stock</span>
       <span class="productPrice">{{ product.price }}€</span>
     </div>
 

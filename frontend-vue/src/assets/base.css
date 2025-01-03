@@ -212,7 +212,7 @@ footer {
 .productDetails {
   display: grid;
   grid-template-rows: auto auto auto;
-  grid-template-columns: auto auto;
+  grid-auto-columns: auto;
   row-gap: 0.25rem;
   column-gap: 1rem;
   justify-content: start;
@@ -224,15 +224,12 @@ footer {
 }
 
 .productDetails .productViews {
-  grid-column: 1;
-
   font-size: 1rem;
   color: #777;
   font-style: italic;
 }
 
 .productDetails .productStock {
-  grid-column: 2;
   margin-bottom: 0.25rem;
 
   font-size: 1rem;
