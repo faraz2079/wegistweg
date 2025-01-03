@@ -8,8 +8,8 @@ import reactor.core.publisher.Flux;
 import java.util.List;
 
 public interface ProductInteractionService {
-    void startViewing(long productId, long userId);
-    void stopViewing(long productId, long userId);
+    void startViewing(long productId, Long userId, String guestSessionId);
+    void stopViewing(long productId, Long userId, String guestSessionId);
     void addProductInteraction(ProductInteraction productInteraction);
 
     Flux<Integer> subscribeToPageViews(Long productId);

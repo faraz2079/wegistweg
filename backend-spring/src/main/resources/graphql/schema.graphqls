@@ -5,8 +5,8 @@ type Query {
 }
 
 type Mutation {
-    startViewing(productId: ID!, userId: ID!): Boolean
-    stopViewing(productId: ID!, userId: ID!): Boolean
+    startViewing(productId: ID!, userId: ID, guestSessionId: String): Boolean
+    stopViewing(productId: ID!, userId: ID, guestSessionId: String): Boolean
 }
 
 type User {

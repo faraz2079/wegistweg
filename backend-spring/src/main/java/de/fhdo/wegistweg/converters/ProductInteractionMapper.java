@@ -16,19 +16,4 @@ public class ProductInteractionMapper {
         this.userRepository = userRepository;
     }
 
-    public ProductInteractionDto entityToDto(ProductInteraction entity) {
-        return new ProductInteractionDto(
-                entity.getProduct().getId(),
-                entity.getUser().getId(),
-                entity.getInteractionType(),
-                entity.getTimestamp() );
-    }
-
-    public ProductInteraction dtoToEntity(ProductInteractionDto dto) {
-        return new ProductInteraction(
-                productRepository.findById(dto.getProductId()).orElseThrow(),
-                userRepository.findById(dto.getUserId()).orElseThrow(),
-                dto.getTimestamp(),
-                dto.getInteractionType());
-    }
 }

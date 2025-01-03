@@ -28,14 +28,14 @@ public class ProductInteractionGraphQlController {
     }
 
     @MutationMapping("startViewing")
-    public boolean startViewing(@Argument long productId,@Argument long userId) {
-        productInteractionService.startViewing(productId, userId);
+    public boolean startViewing(@Argument long productId, @Argument Long userId, @Argument String guestSessionId) {
+        productInteractionService.startViewing(productId, userId, guestSessionId);
         return true;
     }
 
     @MutationMapping("stopViewing")
-    public boolean stopViewing(@Argument long productId,@Argument long userId) {
-        productInteractionService.stopViewing(productId, userId);
+    public boolean stopViewing(@Argument long productId, @Argument Long userId, @Argument String guestSessionId) {
+        productInteractionService.stopViewing(productId, userId, guestSessionId);
         return true;
     }
 
