@@ -246,7 +246,7 @@ footer {
 }
 
 .productAdminOptions {
-  border: #1F509A solid .15rem;
+  border: #a6a59c dotted .15rem;
   width: fit-content;
   padding: 1rem;
 
@@ -254,6 +254,7 @@ footer {
 
   display: flex;
   flex-direction: column;
+  row-gap: 1rem;
 }
 
 .productAdminOptions h3 {

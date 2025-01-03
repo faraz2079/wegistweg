@@ -28,6 +28,7 @@ export default {
           return { productId: this.productId }
         },
         result ({ data }) {
+          console.log("View count changed to", data.productViews)
           this.viewCount = data.productViews
         }
       },
@@ -43,7 +44,7 @@ export default {
           return { productId: this.productId }
         },
         result ({ data }) {
-          console.log(data)
+          console.log("Product Display Settings updated", data)
           delete data.productDisplaySettings.__typename // Remove this field, so that the object can be reused as an input type for mutations
           this.displaySettings = data.productDisplaySettings
         }
@@ -62,9 +63,6 @@ export default {
     '$route.params.id'(newVal, oldVal) {
       // React to changes of the route.
       // This is not called initially!
-      console.log(newVal)
-      console.log(oldVal)
-
       this.productId = newVal
       this.stopViewing(oldVal)
       this.startViewing(newVal)
@@ -73,7 +71,7 @@ export default {
   methods: {
     // Notify the server that the product is being viewed
     startViewing(productId) {
-      console.log("Starting viewing {productId}", productId)
+      console.log("Start viewing product", productId)
       this.$apollo.mutate({
           mutation: gql`mutation($productId: ID!, $userId: ID, $guestSessionId: String) {
             startViewing(productId: $productId, userId: $userId, guestSessionId: $guestSessionId)
@@ -86,7 +84,7 @@ export default {
       })
     },
     stopViewing(productId) {
-      console.log("Stop viewing {productId}", productId)
+      console.log("Stop viewing product", productId)
       this.$apollo.mutate({
         mutation: gql`mutation($productId: ID!, $userId: ID, $guestSessionId: String) {
             stopViewing(productId: $productId, userId: $userId, guestSessionId: $guestSessionId)
@@ -111,16 +109,22 @@ export default {
           productDisplaySettings: this.displaySettings
         }
       })
+    },
+    getProductViewsMessage(viewCount) {
+      if (viewCount > 1)
+        return `currently viewed by ${viewCount} users`
+      else
+        return `currently viewed by 1 user`
     }
   },
   mounted() {
-    console.log("Component mounted.");
+    console.log("Component ProductDetail mounted.");
     this.productId = this.$route.params.id
     this.startViewing(this.productId)
     window.addEventListener('beforeunload', this.stopViewingCurrentProduct) // Ensure a "stop viewing" message is sent to the server, when the user refreshes the page
   },
   beforeUnmount() {
-    console.log("Before unmount.");
+    console.log("Before unmount ProductDetail.");
     this.stopViewing(this.productId)
     window.removeEventListener('beforeunload', this.stopViewingCurrentProduct)
   }
@@ -131,7 +135,7 @@ export default {
   <div class="container">
     <div class="productDetails">
       <h1 class="productName">{{ product.name }}</h1>
-      <span class="productViews" v-if="displaySettings.displayViews" >currently viewed by {{ viewCount }} users</span>
+      <span class="productViews" v-if="displaySettings.displayViews" >{{ getProductViewsMessage(viewCount) }}</span>
       <span class="productStock" v-if="displaySettings.displayStockLevel">{{ product.stock }} in stock</span>
       <span class="productPrice">{{ product.price }}€</span>
     </div>
