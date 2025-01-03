@@ -3,7 +3,6 @@ package de.fhdo.wegistweg.api.rest;
 import de.fhdo.wegistweg.dto.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import de.fhdo.wegistweg.entity.Product;
 import de.fhdo.wegistweg.service.ProductService;
 
 import java.util.List;
@@ -17,5 +16,11 @@ public class ProductController {
     @GetMapping
     public List<ProductDto> getAllProducts() {
         return productService.getProducts();
+    }
+
+
+    @GetMapping("/{id}")
+    public ProductDto getProduct(@PathVariable long id) {
+        return productService.getProduct(id);
     }
 }
