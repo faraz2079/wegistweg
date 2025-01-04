@@ -1,9 +1,6 @@
 package de.fhdo.wegistweg.bootstrap;
 
-import de.fhdo.wegistweg.entity.Product;
-import de.fhdo.wegistweg.entity.ProductInteraction;
-import de.fhdo.wegistweg.entity.ProductInteractionType;
-import de.fhdo.wegistweg.entity.User;
+import de.fhdo.wegistweg.entity.*;
 import de.fhdo.wegistweg.repository.ProductDisplaySettingsRepository;
 import de.fhdo.wegistweg.repository.ProductInteractionRepository;
 import de.fhdo.wegistweg.repository.ProductRepository;
@@ -89,7 +86,7 @@ public class ExampleDataInitializer implements CommandLineRunner {
     }
 
     private void initProductInteractions() {
-        final int numberOfInteractions = 200;
+        final int numberOfInteractions = 100;
 
         final LocalDateTime timestamp = LocalDateTime.now().minusSeconds(numberOfInteractions);
 
@@ -97,15 +94,25 @@ public class ExampleDataInitializer implements CommandLineRunner {
         final List<Product> products = productRepository.findAll();
         ProductInteractionType[] productInteractionTypes = ProductInteractionType.values();
 
-
+        // Views
         for (int i = 0; i < numberOfInteractions; i++) {
-            ProductInteraction productInteraction = new ProductInteraction();
-            productInteraction.setUser(users.get(random.nextInt(users.size())));
-            productInteraction.setProduct(products.get(random.nextInt(products.size())));
-            productInteraction.setTimestamp(timestamp.plusSeconds(numberOfInteractions));
-            productInteraction.setInteractionType(productInteractionTypes[random.nextInt(productInteractionTypes.length)]);
+            User user = users.get(random.nextInt(users.size()));
+            Product product = products.get(random.nextInt(products.size()));
 
-            productInteractionService.addProductInteraction(productInteraction);
+            RegisteredUserProductInteraction startInteraction = new RegisteredUserProductInteraction();
+            startInteraction.setUser(user);
+            startInteraction.setProduct(product);
+            startInteraction.setInteractionType(ProductInteractionType.VIEW_START);
+            startInteraction.setTimestamp(timestamp.plusSeconds(numberOfInteractions));
+            productInteractionService.addProductInteraction(startInteraction);
+
+            RegisteredUserProductInteraction endInteraction = new RegisteredUserProductInteraction();
+            endInteraction.setUser(user);
+            endInteraction.setProduct(product);
+            endInteraction.setInteractionType(ProductInteractionType.VIEW_END);
+            endInteraction.setTimestamp(timestamp.plusSeconds(numberOfInteractions).plusSeconds(5));
+            productInteractionService.addProductInteraction(endInteraction);
+
         }
     }
 

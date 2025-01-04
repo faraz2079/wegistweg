@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductDisplaySettingsRepository extends JpaRepository<ProductDisplaySettings, Long> {
+    ProductDisplaySettings findProductDisplaySettingsByProductId(Long productId);
 }

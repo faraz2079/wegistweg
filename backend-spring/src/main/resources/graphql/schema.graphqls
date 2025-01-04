@@ -1,6 +1,13 @@
 type Query {
+    product(id: ID!): Product!
     products: [Product!]!
     users: [User!]!
+}
+
+type Mutation {
+    startViewing(productId: ID!, userId: ID, guestSessionId: String): Boolean
+    stopViewing(productId: ID!, userId: ID, guestSessionId: String): Boolean
+    updateProductViewSettings(productDisplaySettings: ProductDisplaySettingsInput!): Boolean
 }
 
 type User {
@@ -16,6 +23,24 @@ type Product {
     price: Float!
 }
 
+type ProductViewCount {
+    product: Product
+    viewCount: Int
+}
+
+input ProductDisplaySettingsInput {
+    productId: ID!
+    displayStockLevel: Boolean
+    displayViews: Boolean
+}
+
+type ProductDisplaySettings {
+    productId: ID!
+    displayStockLevel: Boolean
+    displayViews: Boolean
+}
+
+# TODO Remove
 type ProductInteraction {
     id: ID!
 
@@ -29,8 +54,10 @@ type ProductInteraction {
 type Subscription {
     productViews(productId: ID): Int
     counter: Int
+    productDisplaySettings(productId: ID!): ProductDisplaySettings
 }
 
+# TODO Remove
 enum ProductInteractionType {
     VIEW_START, VIEW_END, ADD_TO_CART, REMOVE_FROM_CART
 }

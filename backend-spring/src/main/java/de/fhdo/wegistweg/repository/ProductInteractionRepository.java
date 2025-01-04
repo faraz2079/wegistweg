@@ -40,7 +40,7 @@ public interface ProductInteractionRepository extends JpaRepository<ProductInter
         AND pi.timestamp >= :since
     GROUP BY pi.product
     HAVING COUNT(pi) > 0
-    ORDER BY viewCount DESC
+    ORDER BY viewCount DESC, pi.product.name ASC
     """)
     List<Object[]> findMostViewedProducts(Pageable pageable, @Param("since") LocalDateTime since);
 }

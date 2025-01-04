@@ -1,8 +1,7 @@
 package de.fhdo.wegistweg.api.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import de.fhdo.wegistweg.dto.ProductDto;
 import org.springframework.web.bind.annotation.*;
-import de.fhdo.wegistweg.entity.Product;
 import de.fhdo.wegistweg.service.ProductService;
 
 import java.util.List;
@@ -10,11 +9,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         return productService.getProducts();
+    }
+
+
+    @GetMapping("/{id}")
+    public ProductDto getProduct(@PathVariable long id) {
+        return productService.getProduct(id);
     }
 }

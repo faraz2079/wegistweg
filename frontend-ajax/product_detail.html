@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Wegistweg</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+
+<body>
+    <header>
+        <div class="logo">Wegistweg</div>
+        <nav>
+            <ul>
+                <li><a href="products_mostViewed.html">Home</a></li>
+                <li><a href="SignUp/index.html">Sign Up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="productAdminOptions">
+                <label>
+                    Product ID:
+                    <input id="productIdIinput" type="number"  min="1" max="50" value="1">
+                </label>
+                <button id="productUpdateButton">UPDATE PRODUCT</button>
+            </div>
+
+            <div class="divider"></div>
+        
+            <h1>REST</h1>
+            <div id="productFetch" class="productDetails">
+                No product fetched yet
+            </div>      
+
+            <div class="divider"></div>
+            
+            <h1>GRAPHQL</h1>
+            <div id="productGraphQl" class="productDetails">
+                No product fetched yet
+            </div>        
+</div>
+    </main>
+
+    <footer>
+        <nav class="container-horizontal">
+            <div class="footer-section">
+                <h2>Products</h2>
+                <ul>
+                    <li><a href="products_all.html">All products</a></li>
+                    <li><a href="products_mostViewed.html">Most viewed</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h2>Account</h2>
+                <ul>
+                    <li><a href="Account/index.html">My Account</a></li>
+                    <li><a href="LogIn/index.html">Login / Register</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h2>Contact</h2>
+                <ul>
+                    <li><a href="#">faraz@mail</a></li>
+                    <li><a href="#">adam@mail</a></li>
+                </ul>
+            </div>
+        </nav>
+        <p class="copyright">&copy; The Springers 2024</p>
+    </footer>
+</body>
+
+<script>
+    const productIdInput = document.getElementById("productIdIinput");
+    const button = document.getElementById("productUpdateButton");
+
+    button.addEventListener('click', function() {
+        const productId = parseInt(productIdInput.value);
+        getProductRest(productId);
+        getProductGraphQl(productId);
+    });
+
+    let getProductGraphQl = function(productId) {
+        fetch('http://localhost:8080/graphql', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                variables: {productId: productId},
+                query: 
+                `
+                query ($productId: ID!) {
+                    product(id: $productId) {
+                        name
+                        stock
+                        price
+                    }
+                }
+                `
+            })
+        })
+            .then(response => response.json())
+            .then(json => json.data.product) // Unpack GraphQl Response
+            .then(product => buildProductElement(product, "productGraphQl"));
+    }
+    
+    let getProductRest = function(productId) {
+        fetch(`http://localhost:8080/products/${productId}`)
+            .then(response => response.json())
+            .then(json => buildProductElement(json, "productFetch"));
+    };
+
+    let buildProductElement = function(product, elementId) {
+        console.log(product, elementId)
+        let productElement = document.getElementById(elementId);
+        productElement.innerHTML = "";
+        productElement.innerHTML =
+        `
+        <h2 class="productName">${product.name}</h2>
+        <span class="productStock">${product.stock} in stock</span>
+        <span class="productPrice">${product.price}€</span>
+        `
+    }
+</script>
+
+</html>

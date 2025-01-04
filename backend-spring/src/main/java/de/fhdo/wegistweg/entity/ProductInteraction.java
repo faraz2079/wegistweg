@@ -6,15 +6,15 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-public class ProductInteraction {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type")
+public abstract class ProductInteraction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne
     private Product product;
-
-    @ManyToOne User user;
 
     @NotNull
     private LocalDateTime timestamp;
@@ -24,12 +24,16 @@ public class ProductInteraction {
     public ProductInteraction() {
     }
 
-    public ProductInteraction(Product product, User user, LocalDateTime timestamp, ProductInteractionType interactionType) {
+    public ProductInteraction(Product product, LocalDateTime timestamp, ProductInteractionType interactionType) {
         this.product = product;
-        this.user = user;
         this.timestamp = timestamp;
         this.interactionType = interactionType;
     }
+
+    /**
+     * @return the identifier of the actor that is interacting with the product
+     */
+    public abstract String getActorIdentifier();
 
     public Long getId() {
         return id;
@@ -45,14 +49,6 @@ public class ProductInteraction {
 
     public void setProduct(Product product) {
         this.product = product;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public LocalDateTime getTimestamp() {

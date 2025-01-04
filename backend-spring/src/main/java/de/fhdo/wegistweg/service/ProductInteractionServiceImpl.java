@@ -2,12 +2,12 @@ package de.fhdo.wegistweg.service;
 
 import de.fhdo.wegistweg.converters.ProductInteractionMapper;
 import de.fhdo.wegistweg.converters.ProductMapper;
-import de.fhdo.wegistweg.entity.Product;
-import de.fhdo.wegistweg.entity.ProductInteraction;
+import de.fhdo.wegistweg.entity.*;
 import de.fhdo.wegistweg.dto.ProductDto;
-import de.fhdo.wegistweg.dto.ProductInteractionDto;
 import de.fhdo.wegistweg.dto.ProductViewCountDto;
 import de.fhdo.wegistweg.repository.ProductInteractionRepository;
+import de.fhdo.wegistweg.repository.ProductRepository;
+import de.fhdo.wegistweg.repository.UserRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -24,36 +24,63 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductInteractionServiceImpl implements ProductInteractionService{
-    /** ProductId -> Set<UserId> */
-    private final Map<Long, Set<Long>> activeViewersByProduct = new ConcurrentHashMap<>();
+    /** ProductId -> Set<ActorId> */
+    private final Map<Long, Set<String>> activeViewersByProduct = new ConcurrentHashMap<>();
     private final Sinks.Many<Long> activeViewersByProductSink = Sinks.many().multicast().directBestEffort();
 
-    private final ProductInteractionRepository repository;
-    private final ProductInteractionMapper productInteractionMapper;
+    private final ProductRepository productRepository;
+    private final ProductInteractionRepository productInteractionRepository;
+    private final UserRepository userRepository;
     private final ProductMapper productMapper;
 
-    public ProductInteractionServiceImpl(ProductInteractionRepository repositoryl, ProductInteractionMapper productInteractionMapper, ProductMapper productMapper) {
-        this.repository = repositoryl;
-        this.productInteractionMapper = productInteractionMapper;
+    public ProductInteractionServiceImpl(ProductRepository productRepository, ProductInteractionRepository productInteractionRepository, UserRepository userRepository, ProductInteractionMapper productInteractionMapper, ProductMapper productMapper) {
+        this.productRepository = productRepository;
+        this.productInteractionRepository = productInteractionRepository;
+        this.userRepository = userRepository;
         this.productMapper = productMapper;
+    }
+
+    @Override
+    public void startViewing(long productId, Long userId, String guestSessionId) {
+        ProductInteraction productInteraction;
+        Product product = productRepository.findById(productId).orElseThrow();
+
+        if (userId != null) {
+            User user = userRepository.findById(userId).orElseThrow();
+            productInteraction = new RegisteredUserProductInteraction(product, LocalDateTime.now(), ProductInteractionType.VIEW_START, user);
+        } else {
+            productInteraction = new GuestProductInteraction(product, LocalDateTime.now(), ProductInteractionType.VIEW_START, guestSessionId);
+        }
+
+        addProductInteraction(productInteraction);
+    }
+
+    @Override
+    public void stopViewing(long productId, Long userId, String guestSessionId) {
+        ProductInteraction productInteraction;
+        Product product = productRepository.findById(productId).orElseThrow();
+
+        if (userId != null) {
+            User user = userRepository.findById(userId).orElseThrow();
+            productInteraction = new RegisteredUserProductInteraction(product, LocalDateTime.now(), ProductInteractionType.VIEW_END, user);
+        } else {
+            productInteraction = new GuestProductInteraction(product, LocalDateTime.now(), ProductInteractionType.VIEW_END, guestSessionId);
+        }
+
+        addProductInteraction(productInteraction);
     }
 
     @Override
     public void addProductInteraction(ProductInteraction productInteraction) {
         final Long productId = productInteraction.getProduct().getId();
-        final Long userId = productInteraction.getUser().getId();
+        final String actorId = productInteraction.getActorIdentifier();
 
         switch (productInteraction.getInteractionType()) {
-            case VIEW_START -> startViewing(productId, userId);
-            case VIEW_END -> stopViewing(productId, userId);
+            case VIEW_START -> processStartViewingInteraction(productId, actorId);
+            case VIEW_END -> processStopViewingInteraction(productId, actorId);
         }
 
-        repository.save(productInteraction);
-    }
-
-    @Override
-    public void addProductInteraction(ProductInteractionDto productInteractionDto) {
-        addProductInteraction(productInteractionMapper.dtoToEntity(productInteractionDto));
+        productInteractionRepository.save(productInteraction);
     }
 
     @Override
@@ -73,7 +100,7 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
     @Override
     public List<ProductViewCountDto> getTopTenMostViewedProducts_allTime() {
         Pageable topTen = Pageable.ofSize(10);
-        List<Object[]> results = repository.findMostViewedProducts(topTen);
+        List<Object[]> results = productInteractionRepository.findMostViewedProducts(topTen);
 
         return convertResults(results);
     }
@@ -83,7 +110,7 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
     public List<ProductViewCountDto> getTopTenMostViewedProducts_today() {
         Pageable topTen = Pageable.ofSize(10);
         LocalDateTime startOfToday = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        List<Object[]> results = repository.findMostViewedProducts(topTen, startOfToday);
+        List<Object[]> results = productInteractionRepository.findMostViewedProducts(topTen, startOfToday);
 
         return convertResults(results);
     }
@@ -105,25 +132,25 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
                 .collect(Collectors.toList());
     }
 
-    private void startViewing(Long productId, Long userId) {
-        final Set<Long> viewers = activeViewersByProduct.get(productId);
+    private void processStartViewingInteraction(Long productId, String actorId) {
+        final Set<String> viewers = activeViewersByProduct.get(productId);
 
         if (viewers != null) {
-            viewers.add(userId);
+            viewers.add(actorId);
         }
         else {
-            Set<Long> newViewers = new ConcurrentSkipListSet<>();
-            newViewers.add(userId);
+            Set<String> newViewers = new ConcurrentSkipListSet<>();
+            newViewers.add(actorId);
             activeViewersByProduct.put(productId, newViewers);
         }
 
         activeViewersByProductSink.tryEmitNext(productId);
     }
-    private void stopViewing(Long productId, Long userId) {
-        final Set<Long> viewers = activeViewersByProduct.get(productId);
+    private void processStopViewingInteraction(Long productId, String actorId) {
+        final Set<String> viewers = activeViewersByProduct.get(productId);
 
         if (viewers != null) {
-            viewers.remove(userId);
+            viewers.remove(actorId);
             activeViewersByProductSink.tryEmitNext(productId);
         }
     }

@@ -1,7 +1,9 @@
 package de.fhdo.wegistweg.api.graphql;
 
+import de.fhdo.wegistweg.dto.ProductDto;
 import de.fhdo.wegistweg.entity.Product;
 import de.fhdo.wegistweg.service.ProductService;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
@@ -17,7 +19,12 @@ public class ProductGraphQlController {
     }
 
     @QueryMapping("products")
-    public List<Product> getProducts() {
+    public List<ProductDto> getProducts() {
         return productService.getProducts();
+    }
+
+    @QueryMapping("product")
+    public ProductDto getProduct(@Argument long id) {
+        return productService.getProduct(id);
     }
 }

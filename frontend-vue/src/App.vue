@@ -1,5 +1,19 @@
 <script>
 export default {
+  data() {
+    return {
+      authState: {
+        userId: null,
+        isAdmin: false,
+        guestSessionId: Math.floor(Math.random() * 100000000).toString(),
+      }
+    }
+  },
+  provide() {
+    return {
+      authState: this.authState
+    }
+  }
 }
 </script>
 
@@ -19,12 +33,12 @@ export default {
   </main>
 
   <footer>
-    <div class="container-horizontal">
+    <nav class="container-horizontal">
       <div class="footer-section">
         <h2>Products</h2>
         <ul>
-          <li><router-link to="/testCounter">All products</router-link></li>
-          <li><router-link to="/testCounter">Most viewed</router-link></li>
+          <li><router-link :to="{ name: 'products'}">All products</router-link></li>
+          <li><router-link :to="{ name: 'productsMostViewed'}">Most viewed</router-link></li>
         </ul>
       </div>
       <div class="footer-section">
@@ -41,7 +55,7 @@ export default {
           <li><a href="#">adam@mail</a></li>
         </ul>
       </div>
-    </div>
+    </nav>
     <p class="copyright">&copy; The Springers 2024</p>
   </footer>
 </template>
