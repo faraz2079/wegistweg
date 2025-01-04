@@ -24,10 +24,9 @@ public class UserController {
     }
 
     // Get all users
-    @GetMapping(produces = {"application/json", "application/xml"})
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @PostMapping("/signup")
@@ -51,3 +50,40 @@ public class UserController {
         return userService.updateUser(id, user);
     }
 }
+
+
+//public class UserController {
+//
+//    private final UserService userService;
+//    private final PasswordEncoder passwordEncoder;
+//
+//    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+//        this.userService = userService;
+//        this.passwordEncoder = passwordEncoder;
+//    }
+//
+//    @GetMapping
+//    public List<User> getAllUsers() {
+//        return userService.getAllUsers();
+//    }
+//
+//    @PostMapping("/signup")
+//    public User signUp(@RequestBody User user) {
+//        return userService.signUpUser(user);
+//    }
+//
+//    @PostMapping("/login")
+//    public User login(@RequestParam String email, @RequestParam String password) {
+//        return userService.loginUser(email, password);
+//    }
+//
+//    @PostMapping("/reset-password")
+//    public void resetPassword(@RequestParam String email, @RequestParam String newPassword) {
+//        userService.resetPassword(email, newPassword);
+//    }
+//
+//    @PutMapping("/{id}")
+//    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+//        return userService.updateUser(id, user);
+//    }
+//}
