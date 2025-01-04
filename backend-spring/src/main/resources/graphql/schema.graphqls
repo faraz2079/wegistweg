@@ -1,9 +1,12 @@
 type Query {
     products: [Product!]!
+    users: [User!]!
 }
 
 type User {
     id: ID!
+    username: String!
+    email: String!
 }
 
 type Product {
@@ -31,3 +34,4 @@ type Subscription {
 enum ProductInteractionType {
     VIEW_START, VIEW_END, ADD_TO_CART, REMOVE_FROM_CART
 }
+

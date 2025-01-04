@@ -1,5 +1,7 @@
 package de.fhdo.wegistweg.api.rest;
 
+import de.fhdo.wegistweg.service.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 import de.fhdo.wegistweg.entity.User;
 import de.fhdo.wegistweg.service.PasswordEncoder;
 import de.fhdo.wegistweg.service.UserService;
@@ -13,11 +15,13 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // Get all users
     @GetMapping(produces = {"application/json", "application/xml"})
@@ -34,12 +38,9 @@ public class UserController {
         return ResponseEntity.ok(createdUser);
     }
 
-    // Sign up a new user
-    @PostMapping(value = "/signup", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
-    public ResponseEntity<User> signUp(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User signedUpUser = userService.createUser(user);
-        return ResponseEntity.ok(signedUpUser);
+    @PostMapping("/signup")
+    public User signUp(@RequestBody User user) {
+        return userService.signUpUser(user);
     }
 
     // Update an existing user
