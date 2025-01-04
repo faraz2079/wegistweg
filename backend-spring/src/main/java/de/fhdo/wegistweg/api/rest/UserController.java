@@ -46,9 +46,8 @@ public class UserController {
     }
 
     // Get a single user by ID
-    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.updateUser(id, user);
     }
 }
