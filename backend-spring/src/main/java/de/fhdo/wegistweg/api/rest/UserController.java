@@ -3,14 +3,16 @@ package de.fhdo.wegistweg.api.rest;
 import de.fhdo.wegistweg.service.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import de.fhdo.wegistweg.entity.User;
+import de.fhdo.wegistweg.service.PasswordEncoder;
 import de.fhdo.wegistweg.service.UserService;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin //allowing cross-origin requests
 public class UserController {
 
     private final UserService userService;
@@ -21,9 +23,11 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    // Get all users
+    @GetMapping(produces = {"application/json", "application/xml"})
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("/signup")
@@ -41,8 +45,10 @@ public class UserController {
         userService.resetPassword(email, newPassword);
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    // Get a single user by ID
+    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 }
