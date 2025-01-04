@@ -10,6 +10,8 @@ import de.fhdo.wegistweg.dto.ProductViewCountDto;
 import de.fhdo.wegistweg.repository.ProductInteractionRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class ProductInteractionServiceImpl implements ProductInteractionService{
     /** ProductId -> Set<UserId> */
     private final Map<Long, Set<Long>> activeViewersByProduct = new ConcurrentHashMap<>();
+    private final Sinks.Many<Long> activeViewersByProductSink = Sinks.many().multicast().directBestEffort();
 
     private final ProductInteractionRepository repository;
     private final ProductInteractionMapper productInteractionMapper;
@@ -34,7 +37,6 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
         this.productInteractionMapper = productInteractionMapper;
         this.productMapper = productMapper;
     }
-
 
     @Override
     public void addProductInteraction(ProductInteraction productInteraction) {
@@ -52,6 +54,14 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
     @Override
     public void addProductInteraction(ProductInteractionDto productInteractionDto) {
         addProductInteraction(productInteractionMapper.dtoToEntity(productInteractionDto));
+    }
+
+    @Override
+    public Flux<Integer> subscribeToPageViews(Long productId) {
+        return activeViewersByProductSink.asFlux()
+                .filter(updatedProductId -> updatedProductId.equals(productId))
+                .map(this::getCurrentPageViews)
+                .startWith(this.getCurrentPageViews(productId));
     }
 
     @Override
@@ -106,12 +116,15 @@ public class ProductInteractionServiceImpl implements ProductInteractionService{
             newViewers.add(userId);
             activeViewersByProduct.put(productId, newViewers);
         }
+
+        activeViewersByProductSink.tryEmitNext(productId);
     }
     private void stopViewing(Long productId, Long userId) {
         final Set<Long> viewers = activeViewersByProduct.get(productId);
 
         if (viewers != null) {
             viewers.remove(userId);
+            activeViewersByProductSink.tryEmitNext(productId);
         }
     }
 }

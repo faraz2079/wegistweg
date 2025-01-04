@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exclusive E-commerce</title>
+    <title>Exclusive E-commerce - Sign Up</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,8 +15,7 @@
             <li><a href="#">Home</a></li>
             <li><a href="#">Contact</a></li>
             <li><a href="#">About</a></li>
-            <li><a href="#">Sign Up</a></li>
-            <li><a href="#"><i class="fa fa-search"></i></a></li>
+            <li><a href="#">Log In</a></li>
         </ul>
     </nav>
 </header>
@@ -27,13 +26,13 @@
             <img src="shopping-cart.png" alt="Shopping Cart">
         </div>
         <div class="right-section">
-            <h2>Create an account</h2>
-            <form>
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" required>
+            <h2>Create an Account</h2>
+            <form id="sign-up-form" action="/api/users" method="POST">
+                <label for="username">Name</label>
+                <input type="text" id="username" name="username" required>
 
-                <label for="email">Email or Phone Number</label>
-                <input type="text" id="email" name="email" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
 
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
@@ -41,7 +40,7 @@
                 <button type="submit">Create Account</button>
             </form>
             <p>Sign up with Google</p>
-            <a href="#">Already have an account? Log in</a>
+            <a href="/login.html">Already have an account? Log in</a>
         </div>
     </div>
 </main>
@@ -55,9 +54,9 @@
         </div>
         <div class="footer-section">
             <h2>Support</h2>
-            <p>III Party, Sangrail, Dhaka, Dist: 10th, Bangladesh</p>
-            <p>exclusivebrands.com</p>
-            <p>+88016-9999-9999</p>
+            <p>Fachhochschule Dortmund, Building 42</p>
+            <p>fhdo.de</p>
+            <p>+49155-002-000</p>
         </div>
         <div class="footer-section">
             <h2>Account</h2>
@@ -78,12 +77,6 @@
                 <li><a href="#">Contact</a></li>
             </ul>
         </div>
-        <div class="footer-section">
-            <h2>Download App</h2>
-            <div class="app-store">
-                <img src="app-store.png" alt="App Store">
-                <img src="google-play.png" alt="Google Play">
-            </div>
             <ul class="social-media">
                 <li><a href="#"><i class="fa fa-facebook"></i></a></li>
                 <li><a href="#"><i class="fa fa-instagram"></i></a></li>

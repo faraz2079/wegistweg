@@ -3,13 +3,16 @@ package de.fhdo.wegistweg.api.rest;
 import de.fhdo.wegistweg.service.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import de.fhdo.wegistweg.entity.User;
+import de.fhdo.wegistweg.service.PasswordEncoder;
 import de.fhdo.wegistweg.service.UserService;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -20,27 +23,44 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    // Get all users
+    @GetMapping(produces = {"application/json", "application/xml"})
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
-    @PostMapping
-    public User createUser(@RequestBody User user) {
+    // Create a new user
+    @PostMapping(consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userService.createUser(user);
+        User createdUser = userService.createUser(user);
+        return ResponseEntity.ok(createdUser);
     }
 
-    //check here
-    // check userService && logincontroller thymeleaf
     @PostMapping("/signup")
     public User signUp(@RequestBody User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userService.createUser(user);
+        return userService.signUpUser(user);
     }
 
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    // Update an existing user
+    @PutMapping(value = "/{id}", consumes = {"application/json", "application/xml"}, produces = {"application/json", "application/xml"})
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        User updatedUser = userService.updateUser(id, user);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    // Delete a user by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Get a single user by ID
+    @GetMapping(value = "/{id}", produces = {"application/json", "application/xml"})
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 }
