@@ -19,10 +19,6 @@ public class UserService {
         return userRepository.findAll();
     }
 
-//    public User createUser(User user) {
-//        return userRepository.save(user);
-//    }
-
     public User updateUser(Long id, User user) {
         User existingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         existingUser.setUsername(user.getUsername());

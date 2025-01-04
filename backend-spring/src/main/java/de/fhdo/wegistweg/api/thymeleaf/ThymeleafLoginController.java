@@ -1,5 +1,8 @@
 package de.fhdo.wegistweg.api.thymeleaf;
 
+import de.fhdo.wegistweg.entity.User;
+import de.fhdo.wegistweg.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("th/login")
 public class ThymeleafLoginController {
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping
     public String showLoginPage() {
         return "login";
@@ -19,15 +25,16 @@ public class ThymeleafLoginController {
     // Handles the login form submission
     @PostMapping
     public String handleLogin(@RequestParam String email, @RequestParam String password, Model model) {
-        if (email.isEmpty() || password.isEmpty()) {
-            model.addAttribute("error", "Email and Password cannot be empty.");
-            return "login";
-        }
+        try {
 
-        if ("faraz@mail.com".equals(email) && "1234".equals(password)) {
-            return "redirect:/home";
-        } else {
-            model.addAttribute("error", "Invalid email or password. Please try again.");
+            User user = userService.loginUser(email, password);
+
+            model.addAttribute("success", "Login successful! Welcome, " + user.getUsername() + ".");
+
+            return "login";
+
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
             return "login";
         }
     }

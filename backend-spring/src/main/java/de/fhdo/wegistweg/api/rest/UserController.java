@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin //allows cross-origin requests
+@CrossOrigin //allowing cross-origin requests
 public class UserController {
 
     private final UserService userService;
@@ -26,18 +26,8 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-//    @PostMapping
-//    public User createUser(@RequestBody User user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return userService.createUser(user);
-//    }
-
-    //check here
-    // check userService && logincontroller thymeleaf
     @PostMapping("/signup")
     public User signUp(@RequestBody User user) {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return userService.createUser(user);
         return userService.signUpUser(user);
     }
 
