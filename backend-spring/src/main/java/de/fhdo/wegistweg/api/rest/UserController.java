@@ -1,6 +1,10 @@
 package de.fhdo.wegistweg.api.rest;
 
+import de.fhdo.wegistweg.dto.ErrorResponseDto;
+import de.fhdo.wegistweg.dto.LoginRequestDto;
+import de.fhdo.wegistweg.dto.LoginResponseDto;
 import de.fhdo.wegistweg.service.PasswordEncoder;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import de.fhdo.wegistweg.entity.User;
 import de.fhdo.wegistweg.service.PasswordEncoder;
@@ -35,8 +39,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User login(@RequestParam String email, @RequestParam String password) {
-        return userService.loginUser(email, password);
+    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
+        try {
+            User authenticatedUser = userService.loginUser(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+            return ResponseEntity.ok(new LoginResponseDto(authenticatedUser.getId(), authenticatedUser.getUsername(), "Login successful"));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(401).body(new ErrorResponseDto("Login failed", ex.getMessage()));
+        }
     }
 
     @PostMapping("/reset-password")
@@ -50,40 +59,3 @@ public class UserController {
         return userService.updateUser(id, user);
     }
 }
-
-
-//public class UserController {
-//
-//    private final UserService userService;
-//    private final PasswordEncoder passwordEncoder;
-//
-//    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
-//        this.userService = userService;
-//        this.passwordEncoder = passwordEncoder;
-//    }
-//
-//    @GetMapping
-//    public List<User> getAllUsers() {
-//        return userService.getAllUsers();
-//    }
-//
-//    @PostMapping("/signup")
-//    public User signUp(@RequestBody User user) {
-//        return userService.signUpUser(user);
-//    }
-//
-//    @PostMapping("/login")
-//    public User login(@RequestParam String email, @RequestParam String password) {
-//        return userService.loginUser(email, password);
-//    }
-//
-//    @PostMapping("/reset-password")
-//    public void resetPassword(@RequestParam String email, @RequestParam String newPassword) {
-//        userService.resetPassword(email, newPassword);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-//        return userService.updateUser(id, user);
-//    }
-//}

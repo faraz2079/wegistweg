@@ -9,6 +9,10 @@ type Mutation {
     startViewing(productId: ID!, userId: ID, guestSessionId: String): Boolean
     stopViewing(productId: ID!, userId: ID, guestSessionId: String): Boolean
     updateProductViewSettings(productDisplaySettings: ProductDisplaySettingsInput!): Boolean
+
+    createUser(username: String!, email: String!, password: String!): User!
+    updateUser(id: ID!, username: String!, email: String!): User!
+    deleteUser(id: ID!): Boolean
 }
 
 type User {
