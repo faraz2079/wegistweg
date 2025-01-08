@@ -1,0 +1,13 @@
+The last member for the group Springers is: Faraz Chahybakhsh 7219098
+These are the Parts of Front-end which blongs to me: 
+
+- In frontend-prototype directory => src => main => FrontEnd => the 3 directories : Account, Login, SignUp
+- in backend-spring => src => main => java => de.fhdo.wegistweg => the USER parts are mine in addition to some other class files which 
+i will mention in person
+- also some files in resources directory in backend 
+- the whole Directory of "frontend-vue-login" belong to my part
+
+also in the presentation day of the project it will be only me since all of the other students dropped this module. 
+ 
+Thank you for your attention!
+Faraz Chahybakhsh 
